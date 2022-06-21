@@ -6,7 +6,7 @@ public:
         do{
             slow = arr[slow];
             fast = arr[arr[fast]];
-        }while(slow!=fast);
+        }while(arr[slow]!=arr[fast]);
         slow = 0;
         while(arr[slow]!=arr[fast]){
             slow=arr[slow];

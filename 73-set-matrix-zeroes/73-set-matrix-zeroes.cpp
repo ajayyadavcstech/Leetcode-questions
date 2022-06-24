@@ -1,34 +1,52 @@
 class Solution {
 public:
-    unordered_set<int> row;
-    unordered_set<int> col;
-    void MakeRow_Zero(vector<vector<int>>&mat,int row){
-        for(int i=0;i<mat[0].size();i++){
-            mat[row][i] = 0;
-        }
-    }
-     void MakeCol_Zero(vector<vector<int>>&mat,int col){
-        for(int i=0;i<mat.size();i++){
-            mat[i][col] = 0;
-        }
-    }
     void setZeroes(vector<vector<int>>& matrix) {
-        vector<pair<int,int>> v;
-        for(int i=0;i<matrix.size();i++){
-            for(int j=0;j<matrix[0].size();j++){
-                if(matrix[i][j]==0) v.push_back(make_pair(i,j));
+        int row = matrix.size();
+        int col = matrix[0].size();
+        bool isRow = false;
+        bool isCol = false;
+        for(int i=0;i<col;i++){
+            if(matrix[0][i]==0){
+                isRow=true;
+                break;
             }
         }
-        for(auto p : v){
-            int row1 = p.first;
-            int col1 = p.second;
-            if(row.find(row1)==row.end()){
-                MakeRow_Zero(matrix,row1);
-                row.insert(row1);
+        for(int i=0;i<row;i++){
+            if(matrix[i][0]==0){
+                isCol = true;
+                break;
             }
-            if(col.find(col1)==col.end()){
-                MakeCol_Zero(matrix,col1);
-                col.insert(col1);
+        }
+        for(int i=1;i<row;i++){
+            for(int j=1;j<col;j++){
+                if(matrix[i][j]==0){
+                    matrix[i][0]=0;
+                    matrix[0][j]=0;
+                }
+            }
+        }
+        for(int i=1;i<col;i++){
+            if(matrix[0][i]==0){
+                for(int j=1;j<row;j++){
+                    matrix[j][i]=0;
+                }
+            }
+        }
+         for(int i=1;i<row;i++){
+            if(matrix[i][0]==0){
+                for(int j=1;j<col;j++){
+                    matrix[i][j]=0;
+                }
+            }
+        }
+        if(isRow){
+            for(int i=0;i<col;i++){
+                matrix[0][i]=0;
+            }
+        }
+        if(isCol){
+            for(int i=0;i<row;i++){
+                matrix[i][0]=0;
             }
         }
     }

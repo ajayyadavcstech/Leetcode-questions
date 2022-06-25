@@ -1,20 +1,17 @@
 class Solution {
 public:
-    bool isIncresing(vector<int>&nums){
-        for(int i=0;i<nums.size()-1;i++){
-            if(nums[i]>nums[i+1]) return false;
-        }
-        return true;
-    }
     bool checkPossibility(vector<int>& nums) {
+        int cnt=0;
         for(int i=0;i<nums.size()-1;i++){
             if(nums[i]>nums[i+1]){
-                int pre = nums[i];
-                nums[i] = nums[i+1];
-                bool b1 = isIncresing(nums);
-                nums[i] = nums[i+1] = pre;
-                bool b2 = isIncresing(nums);
-                return b1 || b2;
+                if(cnt==1) return false;
+                cnt++;
+                if(i==0 || nums[i+1]>=nums[i-1]){
+                    nums[i] = nums[i+1];
+                }
+                else{
+                    nums[i+1] = nums[i];
+                }
             }
         }
         return true;

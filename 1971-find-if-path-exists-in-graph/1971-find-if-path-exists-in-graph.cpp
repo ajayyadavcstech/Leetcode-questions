@@ -24,14 +24,7 @@ public:
             adj[edges[i][1]].push_back(edges[i][0]);
         }
         vector<int> visited(n,0);
-        for(int i=0;i<n;i++){
-            if(!visited[i]){
-                bfs(i,adj,visited);
-                if(visited[source] && visited[destination]) return true;
-                else if(!visited[source] && !visited[destination]) continue;
-                else return false;
-            }
-        }
-        return true;
+        bfs(source,adj,visited);
+        return visited[destination];
     }
 };

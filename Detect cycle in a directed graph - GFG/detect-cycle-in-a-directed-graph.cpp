@@ -12,7 +12,7 @@ class Solution {
           if(!visited[x] && dfs(x,adj,visited,dfsvisited)){
               return true;
           }
-          else if(visited[x] && dfsvisited[x]){
+          else if(dfsvisited[x]){
               return true;
           }
       }

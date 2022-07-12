@@ -8,6 +8,7 @@ public:
         if(ind==matchsticks.size()) return false;
         
         for(int i=ind;i<matchsticks.size();i++){
+            if(one_side-matchsticks[i]<0) return false;
             if(!visited[i] && one_side-matchsticks[i]>=0){
                 visited[i]=true;
                 if(isSquare(i+1,matchsticks,visited,one_side-matchsticks[i],n,max_side)) return true;
@@ -17,6 +18,7 @@ public:
         return false;
     }
     bool makesquare(vector<int>& matchsticks) {
+        sort(matchsticks.begin(),matchsticks.end());
         int n = matchsticks.size();
         int Total_length = 0;
         for(auto x : matchsticks) Total_length+=x;

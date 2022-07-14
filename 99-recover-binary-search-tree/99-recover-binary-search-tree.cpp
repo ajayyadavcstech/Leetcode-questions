@@ -11,23 +11,31 @@
  */
 class Solution {
 public:
-    vector<TreeNode*> v;
-    void inorder(TreeNode* root){
+    TreeNode* pre = NULL;
+    TreeNode* node1 = NULL;
+    TreeNode* node2 = NULL;
+    void solve(TreeNode* root){
         if(root==NULL) return ;
-        inorder(root->left);
-        v.push_back(root);
-        inorder(root->right);
+        
+        solve(root->left);
+        if(pre==NULL){
+            pre =root;
+        }
+        else{
+            if(root->val<pre->val){
+                if(node1==NULL){
+                    node1 = pre;
+                    node2 = root;
+                }else if(node1!=NULL){
+                    node2 = root;
+                }
+            }
+        }
+        pre = root;
+        solve(root->right);
     }
     void recoverTree(TreeNode* root) {
-        inorder(root);
-        int s;
-        int e;
-        for( s=0;s<v.size()-1;s++){
-            if(v[s]->val>v[s+1]->val) break;
-        }
-        for(e=v.size()-1;e>0;e--){
-            if(v[e]->val<v[e-1]->val) break;
-        }
-        swap(v[s]->val,v[e]->val);
+        solve(root);
+        swap(node1->val,node2->val);
     }
 };

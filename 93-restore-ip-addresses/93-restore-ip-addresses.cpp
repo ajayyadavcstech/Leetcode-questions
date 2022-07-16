@@ -22,6 +22,7 @@ public:
        }
     }
     vector<string> restoreIpAddresses(string s) {
+        if(s.size()<4 || s.size()>12) return ans;
         solve(s);
         return ans;
     }

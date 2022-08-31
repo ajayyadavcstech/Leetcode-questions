@@ -2,40 +2,53 @@ class Solution {
 public:
     vector<int> Vx = {1,-1,0,0};
     vector<int> Vy = {0,0,1,-1};
-    vector<vector<int>> visited;    
-    vector<vector<pair<int,pair<bool,bool>>>> dp;
-    pair<bool,bool> isWay(vector<vector<int>>& heights,int i,int j,int pre){
-        if(i==-1 || j==-1) return {true,false};
-        if(i==heights.size() || j==heights[0].size()) return {false,true};
-        if(pre<heights[i][j]) return {false,false};
-        if(visited[i][j]) return {false,false};
-        if(dp[i][j].first==1) return dp[i][j].second;
-        
-        visited[i][j] = true;
-        pair<bool,bool> ans = {false,false};
-        for(int k=0;k<4;k++){
-            pair<bool,bool> p = isWay(heights,i+Vx[k],j+Vy[k],heights[i][j]);
-            ans.first = ans.first || p.first;
-            ans.second = ans.second || p.second;
-            if(ans.first && ans.second) {
-                visited[i][j] = false;
-                dp[i][j].first = 1;
-                return dp[i][j].second = ans;
+    void bfs(vector<vector<int>> &visited,vector<vector<int>>& heights,queue<pair<int,int>>&q){
+        while(q.size()){
+            int i = q.front().first;
+            int j = q.front().second;
+            q.pop();
+            
+            for(int k=0;k<4;k++){
+                if(i+Vx[k]>=0 && j+Vy[k]>=0 && i+Vx[k]<visited.size() && j+Vy[k]<visited[0].size() && !visited[i+Vx[k]][j+Vy[k]] && heights[i+Vx[k]][j+Vy[k]]>=heights[i][j]){
+                    visited[i+Vx[k]][j+Vy[k]]++;
+                    q.push({i+Vx[k],j+Vy[k]});
+                }
             }
         }
-        visited[i][j] = false;
-        return ans;
     }
     vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
-        int n = heights.size();
-        int m = heights[0].size();
-        visited.resize(n,vector<int>(m,0));        
-        dp.resize(n,vector<pair<int,pair<bool,bool>>>(m,{-1,{false,false}}));
+        vector<vector<int>> pacific(heights.size(),vector<int>(heights[0].size(),0));
+        vector<vector<int>> atlantic(heights.size(),vector<int>(heights[0].size(),0));
+        
+        queue<pair<int,int>> q1;
+        queue<pair<int,int>> q2;
+        
+        for(int i=0;i<heights.size();i++){
+            pacific[i][0]++;
+            q1.push({i,0});
+        }
+         for(int i=1;i<heights[0].size();i++){
+            pacific[0][i]++;
+            q1.push({0,i});
+        }
+        
+        for(int i=0;i<heights.size();i++){
+            atlantic[i][heights[0].size()-1]++;
+            q2.push({i,heights[0].size()-1});
+        }
+        for(int i=0;i<heights[0].size()-1;i++){
+            atlantic[heights.size()-1][i]++;
+            q2.push({heights.size()-1,i});
+        }
+        
+        bfs(pacific,heights,q1);
+        bfs(atlantic,heights,q2);
+        
         vector<vector<int>> ans;
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                pair<bool,bool> p = isWay(heights,i,j,INT32_MAX);
-                if(p.first && p.second) ans.push_back({i,j});
+        
+        for(int i=0;i<heights.size();i++){
+            for(int j=0;j<heights[0].size();j++){
+                if(pacific[i][j] && atlantic[i][j]) ans.push_back({i,j});
             }
         }
         return ans;

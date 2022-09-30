@@ -1,8 +1,16 @@
 class Solution {
 public:
     int solve(vector<int> &v){
-        sort(v.begin(),v.end(),greater<int>());
-        return v[0]+v[1];
+        int first = 0;
+        int second = 0;
+        for(int i=0;i<v.size();i++){
+           if(v[i]>first){
+               second = first;
+               first = v[i];
+           } 
+            else if(v[i]>second) second = v[i];
+        }
+        return first+second;
     }
     int maximumSum(vector<int>& nums) {
         unordered_map<int,vector<int>> mp;

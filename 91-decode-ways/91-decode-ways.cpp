@@ -1,22 +1,20 @@
 class Solution {
 public:
-    vector<int> dp;
-    int solve(string &s,int i){
-        if(i==s.size()) return 1;
-        if(dp[i]!=-1) return dp[i];
-        
-        if(s[i]=='0') return 0;
-        if(s[i]=='1') {
-            return dp[i] = (i<s.size()-1) ? (solve(s,i+1)+solve(s,i+2)) : solve(s,i+1);
-        }
-        if(s[i]=='2'){
-            return dp[i] = (i<s.size()-1 && s[i+1]>='0' && s[i+1]<='6') ? (solve(s,i+1)+solve(s,i+2)) : solve(s,i+1);
-        }
-        
-        return dp[i] = solve(s,i+1);
-    }
     int numDecodings(string s) {
-        dp.resize(s.size(),-1);
-        return solve(s,0);
+        int n = s.size();
+        vector<int> dp(n+1,0);
+        dp[n] = 1;
+        dp[n-1]= s[n-1]=='0' ? 0 : 1;
+        for(int i=n-2;i>=0;i--){
+            if(s[i]=='0') {
+               dp[i]=0;
+                continue;
+            }
+            int single = dp[i+1];
+            int Double = 0;
+            if(stoi(s.substr(i,2))<=26) Double = dp[i+2];
+            dp[i] = single + Double;
+        }
+        return dp[0];
     }
 };

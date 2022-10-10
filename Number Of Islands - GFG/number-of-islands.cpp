@@ -8,30 +8,48 @@ using namespace std;
 // User function Template for C++
 class Solution {
   public:
-    void solve(vector<vector<int>>&grid,int i,int j){
-        if(i<0 || j<0 || i==grid.size() || j==grid[0].size() || grid[i][j]==0) return ;
-        
-        grid[i][j] = 0;
-        
-        solve(grid,i+1,j);
-        solve(grid,i-1,j);
-        solve(grid,i,j+1);
-        solve(grid,i,j-1);
+    vector<int> parent;
+    int get_parent(int n){
+        if(parent[n]==n) return n;
+        return get_parent(parent[n]);
+    }
+    int union_set(int p1,int p2){
+        p1 = get_parent(p1);
+        p2 = get_parent(p2);
+        parent[p1] = p2;
     }
     vector<int> numOfIslands(int n, int m, vector<vector<int>> &op) {
         // code here
-        vector<int> ans;
         vector<vector<int>> grid(n,vector<int>(m,0));
+        parent.resize(n*m);
+        vector<int> ans;
+        for(int i=0;i<parent.size();i++){
+            parent[i] = i;
+        }
         for(int i=0;i<op.size();i++){
-            grid[op[i][0]][op[i][1]] = 1;
-            vector<vector<int>> temp = grid;
+            int k = op[i][0];
+            int l = op[i][1];
+            int ind = k*m + l;
+            if(grid[k][l]==0){
+                grid[k][l] = 1;
+                if(k+1<n && grid[k+1][l]){
+                    union_set(ind,ind+m);
+                }
+                if(k-1>=0 && grid[k-1][l]){
+                    union_set(ind,ind-m);
+                }
+                if(l+1<m && grid[k][l+1]){
+                    union_set(ind,ind+1);
+                }
+                if(l-1>=0 && grid[k][l-1]){
+                    union_set(ind,ind-1);
+                }
+            }
             int cnt = 0;
-            for(int i=0;i<grid.size();i++){
-                for(int j=0;j<grid[0].size();j++){
-                    if(temp[i][j]){
-                        cnt++;
-                        solve(temp,i,j);
-                    }
+            for(int i=0;i<n;i++){
+                for(int j=0;j<m;j++){
+                    int ind = i*m+j;
+                    if(grid[i][j] && parent[ind]==ind) cnt++;
                 }
             }
             ans.push_back(cnt);

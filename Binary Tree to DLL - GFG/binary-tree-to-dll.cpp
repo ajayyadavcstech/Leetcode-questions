@@ -108,30 +108,28 @@ class Solution
 {
     public: 
     //Function to convert binary tree to doubly linked list and return it.
+    Node* head;
+    void solve(Node* root,Node*&pre){
+        if(!root) return ;
+        Node* left = root->left;
+        Node* right = root->right;
+        solve(left,pre);
+        if(pre){
+            pre->right=root;
+            root->left = pre;
+        }
+        else{
+            head = root;
+        }
+        pre = root;
+        solve(right,pre);
+    }
     Node * bToDLL(Node *root)
     {
         // your code here
-        if(!root) return root;
-        if(!root->left && !root->right) return root;
-        Node* left = bToDLL(root->left);
-        Node* right = bToDLL(root->right);
-        Node* temp = left;
-        if(!temp) {
-            root->right = right;
-            right->left = root;
-            root->left = NULL;
-            return root;
-        }
-        while(temp->right) temp = temp->right;
-        temp->right = root;
-        root->left = temp;
-        root->right = NULL;
-        if(!right){
-            return left;
-        }
-        root->right = right;
-        right->left = root;
-        return left;
+        Node* pre = NULL;
+        solve(root,pre);
+        return head;
     }
 };
 

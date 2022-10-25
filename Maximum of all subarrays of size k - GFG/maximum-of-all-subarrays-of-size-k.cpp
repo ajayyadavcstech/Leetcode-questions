@@ -15,16 +15,23 @@ class Solution
     vector <int> max_of_subarrays(int *arr, int n, int k)
     {
         // your code here
-        priority_queue<pair<int,int>> pq;
-        vector<int> v;
-        for(int i=0;i<n;i++){
-            pq.push({arr[i],i});
-            if(i>=k-1){
-                while(pq.top().second<=(i-k)) pq.pop();
-                v.push_back(pq.top().first);
+        deque<int> dq;
+        for(int i=0;i<k-1;i++){
+            if(dq.size()){
+                while(dq.size() && arr[dq.back()]<=arr[i]) dq.pop_back();
             }
+            dq.push_back(i);
         }
-        return v;
+        vector<int> ans;
+        for(int i = k-1;i<n;i++){
+             if(dq.size()){
+                while(dq.size() && arr[dq.back()]<=arr[i]) dq.pop_back();
+            }
+            dq.push_back(i);
+            while(dq.front()<=(i-k)) dq.pop_front();
+            ans.push_back(arr[dq.front()]);
+        }
+        return ans;
     }
 };
 

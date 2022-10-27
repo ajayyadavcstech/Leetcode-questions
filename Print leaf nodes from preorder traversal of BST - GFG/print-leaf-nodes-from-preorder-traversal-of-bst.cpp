@@ -8,21 +8,26 @@ using namespace std;
 // User function Template for C++
 class Solution {
   public:
-    int solve(int arr[],int&ind,vector<int>& num,int s,int e,int n){
-        if(ind==n) return 0;
-        if(!(arr[ind]>=s && arr[ind]<=e)) return 0;
-        int i = ind;
-        ind++;
-        int left = solve(arr,ind,num,s,arr[i],n);
-        int right = solve(arr,ind,num,arr[i],e,n);
-        if(!left && !right) num.push_back(arr[i]);
-        return 1;
-    }
     vector<int> leafNodes(int arr[],int N) {
         // code here
+        stack<int> st;
         vector<int> ans;
-        int ind = 0;
-        solve(arr,ind,ans,INT32_MIN,INT32_MAX,N);
+        int i=0;
+        while(i<N){
+            if(st.size()==0 || st.top()>arr[i]) st.push(arr[i++]);
+            else{
+                int val = st.top();
+                int cnt = 0;
+                while(st.size() && st.top()<arr[i]){
+                    cnt++;
+                    st.pop();
+                }
+                if(cnt>1) ans.push_back(val);
+                st.push(arr[i]);
+                i++;
+            }
+        }
+        ans.push_back(st.top());
         return ans;
     }
 };

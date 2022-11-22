@@ -1,19 +1,18 @@
 class Solution {
 public:
     bool increasingTriplet(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> left_min(nums.size());
-        vector<int> right_max(nums.size());
-        left_min[0] = nums[0];
-        right_max[n-1] = nums[n-1];
-        for(int i=1;i<n;i++){
-            left_min[i] = min(left_min[i-1],nums[i]);
-        }
-        for(int i=n-2;i>=0;i--){
-            right_max[i] = max(right_max[i+1],nums[i]);
-        }
-        for(int i=0;i<n;i++){
-            if(left_min[i]!=nums[i] && nums[i]!=right_max[i]) return true;
+        map<int,int> right;
+        map<int,int,greater<int>> left;
+        for(auto &x:nums) right[x]++;
+        for(auto&x:nums){
+            left[x]++;
+            auto p1 = left.lower_bound(x);
+            auto p2 = right.lower_bound(x);
+            p1++;
+            p2++;
+            if((p1)!=left.end() && (p2)!=right.end()) return true;
+            right[x]--;
+            if(right[x]==0) right.erase(x);
         }
         return false;
     }

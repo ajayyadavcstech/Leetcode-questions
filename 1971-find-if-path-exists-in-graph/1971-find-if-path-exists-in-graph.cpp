@@ -1,30 +1,22 @@
 class Solution {
 public:
-    void bfs(int v,unordered_map<int,list<int>> &adj,vector<int> &visited){
-        queue<int> q;
-        q.push(v);
-        visited[v]++;
-        
-        while(q.size()){
-            int front = q.front();
-            q.pop();
-            for(auto v : adj[front]){
-                if(!visited[v]){
-                    visited[v]++;
-                    q.push(v);
-                }
-            }
-        }
-        
+    int par(int a,vector<int>&parent){
+        if(parent[a]==a) return a;
+        return par(parent[a],parent);
+    }
+    void add(int a,int b,vector<int>&parent){
+        int p1 = par(a,parent);
+        int p2 = par(b,parent);
+        parent[p2] = p1;
     }
     bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
-        unordered_map<int,list<int>> adj;
-        for(int i=0;i<edges.size();i++){
-            adj[edges[i][0]].push_back(edges[i][1]);
-            adj[edges[i][1]].push_back(edges[i][0]);
+        vector<int> parent(n);
+        for(int i=0;i<n;i++) parent[i] = i;
+        for(auto &v:edges){
+            add(v[0],v[1],parent);
         }
-        vector<int> visited(n,0);
-        bfs(source,adj,visited);
-        return visited[destination];
+        int p1 = par(source,parent);
+        int p2 = par(destination,parent);
+        return p1==p2;
     }
 };

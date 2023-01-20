@@ -2,15 +2,16 @@ class Solution {
 public:
     set<vector<int>> st;
     vector<int> v;
-    void solve(int i,vector<int>&nums,int pre=INT32_MIN){
-        if(v.size()>1) st.insert(v);
-        if(i==nums.size()) return ;
+    void solve(int i,vector<int>&nums){
+        if(i==nums.size()) {
+            if(v.size()>1) st.insert(v);
+            return ;
+        }
         
-        if(nums[i]<pre)  solve(i+1,nums,pre);
-        else{
-            solve(i+1,nums,pre);
+        solve(i+1,nums);
+        if(!v.size() || nums[i]>=v.back()){
             v.push_back(nums[i]);
-            solve(i+1,nums,nums[i]);
+            solve(i+1,nums);
             v.pop_back();
         }
     }

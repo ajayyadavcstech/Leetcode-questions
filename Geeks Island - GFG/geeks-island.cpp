@@ -21,25 +21,26 @@ public:
         vis[i][0].first = true;
         q.push({i,M-1,1});
         vis[i][M-1].second = true;
+        if(vis[i][M-1].first==1) ans++;
      }
      for(int j=0;j<M;j++){
         if(vis[0][j].first==false){
             q.push({0,j,0});
-            vis[0][j].first = true;   
+            vis[0][j].first = true;
+            if(vis[0][j].second==true) ans++;
         }
         if(vis[N-1][j].second==false){
             q.push({N-1,j,1});
             vis[N-1][j].second = true;
+            if(vis[N-1][j].first==true) ans++;
         }
      }
-     
      while(q.size()){
          int i = q.front()[0];
          int j = q.front()[1];
          int oc = q.front()[2];
          q.pop();
-         
-         
+
          for(int k=0;k<4;k++){
              int r = rc[k][0]+i;
              int c = rc[k][1]+j;
@@ -47,17 +48,14 @@ public:
                  if(oc==0 && vis[r][c].first==false){
                      vis[r][c].first = true;
                      q.push({r,c,0});
+                     if(vis[r][c].second==true) ans++;
                  }
                  else if(oc==1 && vis[r][c].second==false){
                      vis[r][c].second = true;
                      q.push({r,c,1});
+                     if(vis[r][c].first==true) ans++;
                  }
              }
-         }
-     }
-     for(int i=0;i<N;i++){
-         for(int j=0;j<M;j++){
-             if(vis[i][j].first && vis[i][j].second) ans++;
          }
      }
      return ans;

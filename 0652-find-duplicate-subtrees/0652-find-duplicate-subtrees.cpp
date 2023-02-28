@@ -11,30 +11,17 @@
  */
 class Solution {
 public:
-    map<vector<int>,vector<TreeNode*>> mp;
-    void preorder(TreeNode* root,vector<int> &temp){
-        if(!root){
-            temp.push_back(INT32_MIN);
-            return ;
-        }
-        temp.push_back(root->val);
-        preorder(root->left,temp);
-        preorder(root->right,temp);
-    }
-    void traverse(TreeNode* root){
-        if(!root) return ;
-        vector<int> temp;
-        preorder(root,temp);
-        mp[temp].push_back(root);
-        traverse(root->left);
-        traverse(root->right);
+    string preorder(TreeNode* root,vector<TreeNode*> &ans,unordered_map<string,int> &mp){
+        if(!root) return "@";
+        string str = to_string(root->val) + "#" + preorder(root->left,ans,mp) + "#" + preorder(root->right,ans,mp);
+        mp[str]++;
+        if(mp[str]==2) ans.push_back(root);
+        return str;
     }
     vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
-        traverse(root);
         vector<TreeNode*> ans;
-        for(auto &x:mp){
-            if(x.second.size()>1) ans.push_back(x.second[0]);
-        }
+        unordered_map<string,int> mp;
+        preorder(root,ans,mp);
         return ans;
     }
 };

@@ -1,29 +1,26 @@
 class Solution {
 public:
-    bool solve(vector<int>&piles,double speed,int hour){
-        int total_hour = 0;
-        for(auto &x:piles){
-            int h = ceil(x/speed);
-            if(h+total_hour>hour) return false;
-            total_hour+=h;
+    bool solve(int k,vector<int>&piles,int h){
+        int hour = 0;
+        for(int i=0;i<piles.size();i++){
+            double pile = piles[i];
+            double cur_hour = pile/k;
+            hour+=ceil(cur_hour);
+            if(hour>h) return false;
         }
         return true;
     }
     int minEatingSpeed(vector<int>& piles, int h) {
-        int mx = 0;
-        for(auto &x:piles){
-            mx = max(mx,x);
-        }
         int s = 1;
-        int e = mx;
-        int ans = 0;
+        int e = 1e9;
+        int ans = -1;
         while(s<=e){
-            int mid = (s+e)/2;
-            if(solve(piles,mid,h)){
+            int mid = s + (e-s)/2;
+            if(solve(mid,piles,h)){
                 ans = mid;
-                e = mid-1;
+                e = mid - 1;
             }
-            else s = mid+1;
+            else s = mid + 1;
         }
         return ans;
     }

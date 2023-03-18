@@ -1,31 +1,37 @@
 class BrowserHistory {
 public:
-    string history[5009];
-    int size;
+    list<string> history;
+    list<string> :: iterator it;
     int cur_url;
-    
     BrowserHistory(string homepage) {
-        history[0] = homepage;
-        size = 1;
+        history.push_back(homepage);
+        it = history.begin();
         cur_url = 0;
     }
     
     void visit(string url) {
+        history.resize(cur_url+1);
+        history.push_back(url);
+        it++;
         cur_url++;
-        history[cur_url] = url;
-        size = cur_url+1;
     }
     
     string back(int steps) {
-        if(cur_url-steps<0) cur_url = 0;
-        else cur_url = cur_url - steps;
-        return history[cur_url];
+        while(steps && cur_url>0){
+            it--;
+            steps--;
+            cur_url--;
+        }
+        return *it;
     }
     
     string forward(int steps) {
-        if(cur_url+steps>=size) cur_url = size-1;
-        else cur_url +=steps;
-        return history[cur_url];
+        while(steps && cur_url<(history.size()-1)){
+            it++;
+            steps--;
+            cur_url++;
+        }
+        return *it;
     }
 };
 
@@ -36,4 +42,3 @@ public:
  * string param_2 = obj->back(steps);
  * string param_3 = obj->forward(steps);
  */
-

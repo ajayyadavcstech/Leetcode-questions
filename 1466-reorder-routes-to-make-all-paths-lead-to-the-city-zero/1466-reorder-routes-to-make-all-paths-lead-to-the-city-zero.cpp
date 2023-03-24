@@ -1,22 +1,20 @@
 class Solution {
 public:
-    void CountReorderRoad(int node,unordered_map<int,unordered_set<int>> &TwoWay,unordered_map<int,unordered_set<int>> &OneWay,int par,int &ans){
-        for(auto &x:TwoWay[node]){
-            if(x==par) continue;
-            if(OneWay[node].count(x)) ans++;
-            CountReorderRoad(x,TwoWay,OneWay,node,ans);
+    void CountReorderRoad(int node,unordered_map<int,vector<vector<int>>>&adj,int par,int &ans){
+        for(auto &x:adj[node]){
+            if(x[0]==par) continue;
+            if(x[1]==1) ans++;
+            CountReorderRoad(x[0],adj,node,ans);
         }
     }
-    int minReorder(int n, vector<vector<int>>& adj) {
-        unordered_map<int,unordered_set<int>> TwoWay;
-        unordered_map<int,unordered_set<int>> OneWay;
-        for(auto &x:adj){
-            TwoWay[x[0]].insert(x[1]);
-            TwoWay[x[1]].insert(x[0]);
-            OneWay[x[0]].insert(x[1]);
+    int minReorder(int n, vector<vector<int>>& list) {
+        unordered_map<int,vector<vector<int>>> adj;
+        for(auto &x:list){
+            adj[x[0]].push_back({x[1],1});
+            adj[x[1]].push_back({x[0],-1});
         }
         int ans = 0;
-        CountReorderRoad(0,TwoWay,OneWay,-1,ans);
+        CountReorderRoad(0,adj,-1,ans);
         return ans;
     }
 };

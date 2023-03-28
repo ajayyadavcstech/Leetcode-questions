@@ -1,17 +1,17 @@
 class Solution {
 public:
-    vector<int> dp;
-    int solve(int d,vector<int>& visite,vector<int>&costs){
-        if(d>365) return 0;
-        if(dp[d]!=-1) return dp[d];
-        
-        if(visite[d]==false) return solve(d+1,visite,costs);
-        return dp[d] = min({costs[0]+solve(d+1,visite,costs),costs[1]+solve(d+7,visite,costs),costs[2]+solve(d+30,visite,costs)});
-    }
     int mincostTickets(vector<int>& days, vector<int>& costs) {
-        vector<int> visited(366,0);
-        dp.resize(366,-1);
-        for(auto &x:days) visited[x]++;
-        return solve(days[0],visited,costs);
+        vector<int> dp(366,0);
+        for(int i=0;i<days.size();i++) dp[days[i]]++;
+        for(int i=1;i<366;i++){
+            if(dp[i]==0) dp[i] = dp[i-1];
+            else{
+                int oneday = costs[0] + dp[i-1];
+                int sevenday = costs[1] + (i-7>0 ? dp[i-7] : 0);
+                int thirtyday =costs[2] + (i-30>0 ? dp[i-30] : 0);
+                dp[i] = min({oneday,sevenday,thirtyday});
+            }
+        }
+        return dp[365];
     }
 };

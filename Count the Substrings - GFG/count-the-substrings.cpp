@@ -11,15 +11,19 @@ class Solution
     int countSubstring(string s)
     {
         // code here
+        vector<int> arr;
+        for(int i=0;i<s.size();i++){
+            if(s[i]>='a' && s[i]<='z') arr.push_back(1);
+            else arr.push_back(-1);
+        }
+        unordered_map<int,int> mp;
+        mp[0] = 1;
+        int prefix = 0;
         int cnt = 0;
         for(int i=0;i<s.size();i++){
-            int lower = 0;
-            int upper = 0;
-            for(int j=i;j<s.size();j++){
-                if(s[j]>='a' && s[j]<='z') lower++;
-                else upper++;
-                if(lower==upper) cnt++;
-            }
+            prefix+=arr[i];
+            cnt+=mp[prefix];
+            mp[prefix]++;
         }
         return cnt;
     }

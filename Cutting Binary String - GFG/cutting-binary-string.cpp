@@ -6,8 +6,9 @@ using namespace std;
 // } Driver Code Ends
 class Solution{
     public:
-    int solve(int i,string s){
+    int solve(int i,string s,vector<int>&dp){
         if(i==s.size()) return 0;
+        if(dp[i]!=-1) return dp[i];
         if(s[i]=='0') return INT32_MAX;
         int mn = INT32_MAX;
         long long x = 0;
@@ -18,16 +19,17 @@ class Solution{
             // if(i==0 && j==s.size()-1) cout<<x<<" "<<n<<" "<<log10(x)<<" "<<log10(5);
             if(x>0 && powl(5,n)==x){
                 // cout<<x<<" ";
-                int next = solve(j+1,s);
+                int next = solve(j+1,s,dp);
                 mn = min(mn,next);
             }
         }
         // cout<<mn<<" "<<i<<endl;
-        return mn==INT32_MAX ? mn : mn+1;
+        return dp[i] = mn==INT32_MAX ? mn : mn+1;
     }
     int cuts(string s){
         //code
-        int ans = solve(0,s);
+        vector<int> dp(s.size(),-1);
+        int ans = solve(0,s,dp);
         return ans==INT32_MAX ? -1 : ans;
     }
 };

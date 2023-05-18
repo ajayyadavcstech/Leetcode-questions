@@ -9,26 +9,29 @@ using namespace std;
 
 class Solution {
     public:
-    
-    bool solve(vector<vector<int>> &mat,int i,int j){
+    void solve(vector<vector<int>> &mat,int i,int j){
         static vector<vector<int>> rc = {{1,-1,0,0},{0,0,-1,1}};
-        if(i<0 || j<0 || i==mat.size() || j==mat[0].size()) return false;
-        if( mat[i][j]==0) return true;
+        if(i<0 || j<0 || i==mat.size() || j==mat[0].size() || mat[i][j]==0) return ;
         mat[i][j] = 0;
-        bool b = true;
         for(int k=0;k<4;k++){
-            b =solve(mat,i+rc[0][k],j+rc[1][k]) && b;
+            solve(mat,i+rc[0][k],j+rc[1][k]);
         }
-        return b;
     }
     int closedIslands(vector<vector<int>>& matrix, int N, int M) {
         // Code here
-        
         int ans = 0;
-        solve(matrix,0,3);
+        for(int i=0;i<N;i++){
+            solve(matrix,i,0);
+            solve(matrix,i,matrix[0].size()-1);
+        } 
+        for(int i=0;i<M;i++){
+            solve(matrix,0,i);
+            solve(matrix,matrix.size()-1,i);
+        }
         for(int i=0;i<N;i++){
             for(int j=0;j<M;j++){
-                if(matrix[i][j]==1 && solve(matrix,i,j)){
+                if(matrix[i][j]==1){
+                    solve(matrix,i,j);
                     ans++;
                 }        
             }
